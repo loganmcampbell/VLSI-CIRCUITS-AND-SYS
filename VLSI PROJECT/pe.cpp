@@ -68,7 +68,7 @@ int main()
   string initial;
   string collect[linecount(filename)-1];
   obtain(filename,collect,initial);
-  //print(collect,linecount(filename)-1);
 
+  cout << initial << endl;
   return 0;
 }
