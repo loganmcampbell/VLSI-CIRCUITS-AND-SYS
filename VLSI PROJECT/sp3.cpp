@@ -19,89 +19,6 @@ int linecount (string filename)
   count - 1;
   return count;
 }
-// A directed graph using adjacency list representation
-class Graph
-{
-    int V; // No. of vertices in graph
-    vector<int> *adj; // Pointer to an array containing adjacency lists
-    // A recursive function used by printAllPaths()
-    void printAllPathsUtil(int , int , bool [], int [], int &);
-
-public:
-    Graph(int V); // Constructor
-    void addEdge(int u, int v);
-    void printAllPaths(int s, int d);
-};
-
-Graph::Graph(int V)
-{
-    this->V = V;
-    adj = new vector<int>[V];
-}
-
-void Graph::addEdge(int u, int v)
-{
-    adj[u].push_back(v); // Add v to u’s list.
-}
-
-// Prints all paths from 's' to 'd'
-void Graph::printAllPaths(int s, int d)
-{
-    // Mark all the vertices as not visited
-    bool *visited = new bool[V];
-
-    // Create an array to store paths
-    int *path = new int[V];
-    int path_index = 0; // Initialize path[] as empty
-    // Initialize all vertices as not visited
-    for (int i = 0; i < V; i++)
-        visited[i] = false;
-
-    // Call the recursive helper function to print all paths
-    printAllPathsUtil(s, d, visited, path, path_index);
-}
-
-
-void Graph::printAllPathsUtil(int u, int d, bool visited[],
-                            int path[], int &path_index)
-{
-    // Mark the current node and store it in path[]
-    int sum;
-    visited[u] = true;
-    path[path_index] = u;
-    path_index++;
-
-    // If current vertex is same as destination, then print
-    // current path[]
-    if (u == d)
-    {
-        for (int i = 0; i<path_index; i++)
-        {
-            cout << path[i] << " ";
-            sum += path[i];
-        }
-
-        sum = sum - 3;
-    //    if(sum <= 0)
-      //    cout << '0';
-  //      else
-      //    cout << "SUM : " << sum << endl;
-
-        cout << endl;
-    }
-    else // If current vertex is not destination
-    {
-        // Recur for all the vertices adjacent to current vertex
-        vector<int>::iterator i;
-        for (i = adj[u].begin(); i != adj[u].end(); ++i)
-            if (!visited[*i])
-                printAllPathsUtil(*i, d, visited, path, path_index);
-    }
-
-    // Remove current vertex from path[] and mark it as unvisited
-    path_index--;
-    visited[u] = false;
-}
 
 void ROF (vector<int> pV, int &mn, vector<int> nV, vector<int> &collect)
 {
@@ -123,7 +40,7 @@ void ROF (vector<int> pV, int &mn, vector<int> nV, vector<int> &collect)
       //cout << "LOCATION OF mn is on NV = " << x << endl;
     }
   }
-  //cout << "\tRIGHT :\t{ ";
+  cout << "\tRIGHT :\t{ ";
   for (int B = 0; B < nummod; B++)
   {
     if ((B > NA))
@@ -142,14 +59,13 @@ void ROF (vector<int> pV, int &mn, vector<int> nV, vector<int> &collect)
    {
     if (table[i] == table[j])
     {
-      //cout << table[j] << " ";
+      cout << table[j] << " ";
       collect.push_back(table[i]);
     }
    }
   }
-//  cout << "}";
+  cout << "}";
 }
-
 void LOF(vector<int> pV, int &mn, vector<int> nV, vector<int> &collect)
 {
   // [A]   [A]
@@ -168,7 +84,7 @@ void LOF(vector<int> pV, int &mn, vector<int> nV, vector<int> &collect)
       NA = x;
     }
   }
-//  cout << "\tLEFT :\t{ ";
+ cout << "\tLEFT :\t{ ";
   for (int B = 0; B < nummod; B++)
   {
     if ((B < NA))
@@ -190,16 +106,14 @@ void LOF(vector<int> pV, int &mn, vector<int> nV, vector<int> &collect)
    {
     if (table[i] == table[j])
     {
-    //  cout << table[j] << " ";
+    cout << table[j] << " ";
     collect.push_back(table[i]);
-
     }
    }
   }
-//  cout << "}";
+  cout << "}";
 
 }
-
 void AOF(vector<int> pV, int &mn, vector<int> nV,vector<int> &collect)
 {
   // [A]      [A]
@@ -218,7 +132,7 @@ void AOF(vector<int> pV, int &mn, vector<int> nV,vector<int> &collect)
       NA = x;
     }
   }
-  //cout << "\tABOVE :\t{ ";
+  cout << "\tABOVE :\t{ ";
   for (int B = 0; B < nummod; B++)
   {
     if ((B > NA))
@@ -239,21 +153,19 @@ void AOF(vector<int> pV, int &mn, vector<int> nV,vector<int> &collect)
    {
     if (table[i] == table[j])
     {
-    //  cout << table[j] << " ";
+      cout << table[j] << " ";
     collect.push_back(table[i]);
 
     }
    }
   }
-//  cout << "}";
+ cout << "}";
 
 }
-
 void BOF(vector<int> pV, int &mn, vector<int> nV,vector<int> &collect)
 {
   //    [A] [A]
   // (B  X , X  B)
-
   int PA; int NA;
   vector<int>table;
 
@@ -270,7 +182,7 @@ void BOF(vector<int> pV, int &mn, vector<int> nV,vector<int> &collect)
     }
   }
 
-//  cout << "\tBELOW :\t{ ";
+ cout << "\tBELOW :\t{ ";
   for (int B = 0; B < nummod; B++)
   {
 
@@ -294,33 +206,12 @@ void BOF(vector<int> pV, int &mn, vector<int> nV,vector<int> &collect)
     {
       collect.push_back(table[i]);
 
-    //  cout << table[j] << " ";
+     cout << table[j] << " ";
     }
    }
   }
-//  cout << "}";
-
+cout << "}";
 }
-
-
-
-// string obtain (string filename, string collect[])
-// {
-//   ifstream input;
-//   input.open(filename.c_str());
-//   //cout << "START : " << initial;
-//   int iterator = 0;
-//   while (input.good()) //infile.good()
-//   {
-//     string capture;
-//     getline(input,capture);
-//     collect[iterator] = capture;
-//     //cout <<"captured : " << iterator << endl;
-//     iterator++;
-//
-//   }
-//   input.close();
-// }
 void read (string filename, string collect [])
 {
   ifstream infile;
@@ -347,8 +238,9 @@ int main()
   int width; int height;
 
   string filename;
-  cout << "Enter filename : \"filename.size\" to gather information: ";
-  cin  >> filename;
+  //cout << "Enter filename : \"filename.size\" to gather information: ";
+  //cin  >> filename;
+  filename = "Test.size";
   infile.open(filename.c_str());
 
   if(infile.fail())
@@ -360,8 +252,9 @@ int main()
 
   ifstream file;
   string filename2;
-  cout << "Enter filename : \"filename.sp\" to gather information: ";
-  cin  >> filename2;
+  //cout << "Enter filename : \"filename.sp\" to gather information: ";
+  //cin  >> filename2;
+  filename2 = "Test.sp";
   file.open(filename2.c_str());
 
   if(file.fail())
@@ -380,19 +273,18 @@ int main()
   {
     modulew[n] = w;
     moduleh[n] = h;
-    cout << "MODULE [" << n << "] : " << w << " " << h;
+    //cout << "MODULE [" << n << "] : " << w << " " << h;
     n++;
-    cout << endl;
+    //cout << endl;
   }
   string collect[linecount(filename2) + 1];
   read(filename2,collect);
 
-  //string test = "+1 7 4 5 2 6 3 8 -8 4 7 2 5 3 6 1\0";
-
   for (int x = 1; x <= modules; x++)
   {
-  string test = collect[0];
-  cout << test << endl;
+  string test = collect[1];
+  //cout << test << endl;
+  cout << endl;
   vector<int>evaluate1;
   vector<int>evaluate2;
   bool start = false; bool flip = true;
@@ -406,7 +298,7 @@ int main()
         flip = true;
         if (isdigit(test[position]))
         {
-          cout << "!POSTIVE! : " << test[position] <<  endl;
+          //cout << "!POSTIVE! : " << test[position] <<  endl;
           int convert = test[position];
           convert = convert - 48;
           evaluate1.push_back(convert);
@@ -420,7 +312,7 @@ int main()
         flip = false;
         if (isdigit(test[position]))
         {
-          cout << "!NEGATIVE! : " << test[position] <<  endl;
+          //cout << "!NEGATIVE! : " << test[position] <<  endl;
           int convert = test[position];
           convert = convert - 48;
           evaluate2.push_back(convert);
@@ -434,7 +326,7 @@ int main()
     vector<int> collect2;
     vector<int> collect3;
     vector<int> collect4;
-    Graph g(modules + 2);
+    //Graph g(modules + 2);
     int s = 1;
     int t = 2;
 
@@ -445,6 +337,7 @@ int main()
       LOF(evaluate1,x,evaluate2,collect2);
       AOF(evaluate1,x,evaluate2,collect3);
       BOF(evaluate1,x,evaluate2,collect4);
+      //cout << "here " << endl;
 
 
       for(int y = 1; y <= modules; y++)
@@ -452,15 +345,20 @@ int main()
       if (collect1.empty())
       {
         //cout << "CONNECTED" << endl;
-        g.addEdge(s,x);
+        //g.addEdge(s,x);
       }
       else
       {
         while(!collect1.empty())
         {
-        //  cout << "CONNECTED" << endl;
-          g.addEdge(collect1.back(),x);
+          //cout << "CONNECTED1" << endl;
+
+          //g.addEdge(collect1.back(),x);
+          //cout << "CONNECTED1" << endl;
+
           collect1.pop_back();
+          //cout << "CONNECTED1" << endl;
+
         }
       }
       collect1.clear();
@@ -468,14 +366,14 @@ int main()
 
       if (collect2.empty())
       {
-      //  cout << "CONNECTED" << endl;
-        g.addEdge(x,t);
+        //cout << "CONNECTED2" << endl;
+        //g.addEdge(x,t);
       }
       collect2.clear();
 
       for(int i = 1; i <= modules; i++)
       {
-        g.printAllPaths(s,i);
+        //g.printAllPaths(s,i);
       }
 
       }
@@ -484,7 +382,7 @@ int main()
       if (collect3.empty())
       {
       //  cout << "CONNECTED" << endl;
-        g.addEdge(x,t);
+      //  g.addEdge(x,t);
       }
       collect3.clear();
 
@@ -493,14 +391,14 @@ int main()
       if (collect4.empty())
       {
         //cout << "CONNECTED" << endl;
-        g.addEdge(s,x);
+        //g.addEdge(s,x);
       }
       else
       {
         while(!collect4.empty())
         {
           //cout << "CONNECTED" << endl;
-          g.addEdge(collect4.back(),x);
+          //g.addEdge(collect4.back(),x);
           collect4.pop_back();
         }
       }
@@ -509,14 +407,14 @@ int main()
 
     for(int i = 1; i <= modules; i++)
     {
-      g.printAllPaths(s,i);
+      //g.printAllPaths(s,i);
     }
 
 }
-for(int k = 1; k < modules; k++)
-    {
-	     cout << "Module: " << k << " Width: " << modulew[k] << " Height: " << moduleh[k] << " Location: "  << endl;
-    }
-//REMOVE EDGES!
+// for(int k = 1; k < modules; k++)
+//     {
+// 	     cout << "Module: " << k << " Width: " << modulew[k] << " Height: " << moduleh[k] << " Location: "  << endl;
+//     }
+
   return 0;
 }
