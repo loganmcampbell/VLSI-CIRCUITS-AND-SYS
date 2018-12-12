@@ -1,194 +1,56 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <stack>
 #include <cctype>
 #include <map>
-#include <list>
 #include <vector>
-#include <climits>
 using namespace std;
-#define NINF INT_MIN
-class AdjListNode
 
-{
 
-        int v;
-
-        int weight;
-
-    public:
-
-        AdjListNode(int _v, int _w)
-
-        {
-
-            v = _v;
-
-            weight = _w;
-
-        }
-
-        int getV()
-
-        {
-
-            return v;
-
-        }
-
-        int getWeight()
-
-        {
-
-            return weight;
-
-        }
-
-};
 
 class graph
 {
-  int V;
-   list<AdjListNode>  *adj;
-  void topologicalSortUtil(int mod, bool visited[], stack<int>& Stack);
-
 
 private:
-    //map<int, vector<int> > graph;
+    map<int, vector<int> > graph;
     int modules;
 public:
 
-    // void constructG(int modules)
-    // {
-    //   for(int x = 0; x < modules +1; x++)
-    //   {
-    //     vector<int> v;
-    //     graph[x] = v;
-    //   }
-    //   this->modules = modules;
-    // }
-    graph(int V);
-    void topologicalSort();
-    void addEdge(int module1,int module2,int weight);
-    void addG(int v, int w);
-    void longestPath(int s);
+    void constructG(int modules)
+    {
+      for(int x = 0; x < modules +1; x++)
+      {
+        vector<int> v;
+        graph[x] = v;
+      }
+      this->modules = modules;
+    }
+    void addEdge(int module1,int module2)
+    {
+      //cout << "ADD EDGE";
+      graph[module1].push_back(module2);
 
+    }
 
-    // void printGraph()
-    // {
-    //   for (int x = 0; x < modules + 1; x++)
-    //   {
-    //     cout << "mod : " << x << " | ";
-    //     while(!graph[x].empty())
-    //     {
-    //       cout << graph[x].back() << " ";
-    //       graph[x].pop_back();
-    //     }
-    //     cout << endl;
-    //
-    //   }
-    // }
+    void printGraph()
+    {
+      for (int x = 0; x < modules + 1; x++)
+      {
+        cout << "mod : " << x << " | ";
+        while(!graph[x].empty())
+        {
+          cout << graph[x].back() << " ";
+          graph[x].pop_back();
+        }
+        cout << endl;
 
-
+      }
+    }
 
 
 };
 
-// void graph::addG(int v, int w)
-// {
-//   adj[v].push_back(w);
-// }
 
-graph::graph(int V)
-{
-  this -> V = V;
-  adj = new list<AdjListNode>[V];
-}
-
-void graph::addEdge(int module1 , int module2, int weight)
-{
-
-    //graph[module1].push_back(module2);
-    AdjListNode node(module2,weight);
-    adj[module2].push_back(node);
-
-  }
-
-
-  void graph::topologicalSortUtil(int v, bool visited[],
-                                  stack<int> &Stack)
-  {
-
-      visited[v] = true;
-
-      list<AdjListNode>::iterator i;
-      for (i = adj[v].begin(); i != adj[v].end(); ++i)
-      {
-          AdjListNode node = *i;
-          if (!visited[node.getV()])
-              topologicalSortUtil(node.getV(), visited, Stack);
-      }
-
-      Stack.push(v);
-  }
-
-  void graph::topologicalSort()
-  {
-      stack<int> Stack;
-
-      bool *visited = new bool[V];
-      for (int i = 0; i < V; i++)
-          visited[i] = false;
-
-      for (int i = 0; i < V; i++)
-        if (visited[i] == false)
-          topologicalSortUtil(i, visited, Stack);
-
-      while (Stack.empty() == false)
-      {
-          cout << Stack.top() << " ";
-          Stack.pop();
-      }
-  }
-  void graph::longestPath(int s)
-  {
-      stack<int> Stack;
-      int dist[V];
-
-      // Mark all the vertices as not visited
-      bool* visited = new bool[V];
-      for (int i = 0; i < V; i++)
-          visited[i] = false;
-
-
-      for (int i = 0; i < V; i++)
-          if (visited[i] == false)
-              topologicalSortUtil(i, visited, Stack);
-
-
-      for (int i = 0; i < V; i++)
-          dist[i] = NINF;
-      dist[s] = 0;
-
-
-      while (Stack.empty() == false) {
-
-          int u = Stack.top();
-          Stack.pop();
-
-          list<AdjListNode>::iterator i;
-          if (dist[u] != NINF) {
-              for (i = adj[u].begin(); i != adj[u].end(); ++i)
-                  if (dist[i->getV()] < dist[u] + i->getWeight())
-                      dist[i->getV()] = dist[u] + i->getWeight();
-          }
-      }
-
-
-      for (int i = 0; i < V; i++)
-          (dist[i] == NINF) ? cout << "INF " : cout << dist[i] << " ";
-  }
 
 
 int linecount (string filename)
@@ -448,6 +310,7 @@ int main()
     exit(-1);
   }
   int modules = linecount(filename) + 1;
+  int mods = modules;
   ifstream file;
   string filename2;
   filename2 = "Test.sp";
@@ -472,10 +335,10 @@ int main()
   }
   string collect[linecount(filename2) + 1];
   read(filename2,collect);
-  // graph gH;
-  // graph gV;
-  graph gH(modules);
-  graph gV(modules);
+  graph gH;
+  graph gV;
+  gH.constructG(modules);
+  gV.constructG(modules);
 
 
   for (int x = 0; x < modules; x++)
@@ -523,33 +386,28 @@ int main()
     vector<int> collect4;
 
 
-      cout << "MODULE [" << x << "] : " << endl;
+      //cout << "MODULE [" << x << "] : " << endl;
       ROF(evaluate1,x,evaluate2,collect1);
       LOF(evaluate1,x,evaluate2,collect2);
       AOF(evaluate1,x,evaluate2,collect3);
       BOF(evaluate1,x,evaluate2,collect4);
-      int w = 0;
-      int h = 0;
+
 
       if (collect1.empty())
       {
-        if (x != 0)
-        {
-    //      gH.addG(x,modulew[x]);
-          // cout << "HC1 : " << x << " " << modules << endl;
+        if(x != 0)
+          gH.addEdge(x,modules);
+        cout << "HC1 : " << x << " " << modules << endl;
 
         //cout << "CONNECTED1" << endl;
-        }
       }
       else
       {
         while(!collect1.empty())
         {
           //cout << "CONNECTED1" << endl;
-          //cout << "H!C1 : " << x << " " << collect1.back() << endl;
-          modulew[x] = w;
-          gH.addEdge(x,collect1.back(),w);
-
+          cout << "H!C1 : " << x << " " << collect1.back() << endl;
+          gH.addEdge(x,collect1.back());
           //cout << "CONNECTED1" << endl;
 
           collect1.pop_back();
@@ -563,72 +421,72 @@ int main()
       if (collect2.empty())
       {
         if(x != 0)
-          modulew[x] = w;
-        gH.addEdge(0,x,w);
+        gH.addEdge(0,x);
 
-        // cout << "CONNECTED1" << endl;
+        //cout << "CONNECTED1" << endl;
       }
+      collect2.clear();
 
 
       if (collect3.empty())
       {
         //cout << "CONNECTED" << endl;
         if(x != 0)
-          moduleh[x] = h;
-          gV.addEdge(x,modules,h);
-
+          gV.addEdge(x,modules);
 
       }
       else
       {
         while(!collect3.empty())
         {
-          moduleh[x] = h;
-          gV.addEdge(x,collect3.back(),h);
+          //cout << "CONNECTED1" << endl;
+          cout << "V!C3 : " << x << " " << collect3.back() << endl;
+
+          gV.addEdge(x,collect3.back());
+          //cout << "CONNECTED1" << endl;
 
           collect3.pop_back();
+          //cout << "CONNECTED1" << endl;
 
         }
       }
+      collect3.clear();
 
       if (collect4.empty())
       {
         if(x != 0)
-        moduleh[x] = h;
-        gV.addEdge(0,x,h);
+        gV.addEdge(0,x);
 
+        //cout << "CONNECTED1" << endl;
       }
-
-      int s = 0;
-
-
-      //gH.weight(weight);
-
-      collect1.clear();
-      collect2.clear();
-      collect3.clear();
       collect4.clear();
+
+
+
+      // if (collect4.empty())
+      // {
+      //   //cout << "CONNECTED" << endl;
+      //   g.addEdge(s,x);
+      // }
+      // else
+      // {
+      //   while(!collect4.empty())
+      //   {
+      //     //cout << "CONNECTED" << endl;
+      //     g.addEdge(collect4.back(),x);
+      //     collect4.pop_back();
+      //   }
+      // }
+      collect4.clear();
+
 }
     cout << "V: " << endl;
-  //    gV.topologicalSort();
-      //gV.printGraph();
+      gV.printGraph();
     cout << endl << "H: " << endl;
-    //  gH.topologicalSort();
-      //gH.printGraph();
+      gH.printGraph();
 
 
 
-      // for (int x = 1; x <= modules; x++)
-      // {
-      //   gH.addWeight(0,x,modulew[x]);
-      //   gV.addWeight(0,x,moduleh[x]);
-      // }
-      //gH.longestPath(s);
-      //gV.longestPath(s);
-      // cout << "x" << endl;
-      // gH.longestPath(s);
-      // gV.longestPath(s);
-      // cout << "K" << endl;
 
   return 0;
 }
